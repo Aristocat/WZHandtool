@@ -1,2 +1,2 @@
-WZHandtool
+WZ Handtool
 ==========

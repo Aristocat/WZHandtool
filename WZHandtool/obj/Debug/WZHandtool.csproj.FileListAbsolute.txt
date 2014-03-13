@@ -1,0 +1,13 @@
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\WZHandtool.exe.config
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\WZHandtool.exe
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\WZHandtool.pdb
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.MainForm.resources
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.Load.resources
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.Properties.Resources.resources
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.UnhandledExceptionLog.resources
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.csproj.GenerateResource.Cache
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.exe
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.pdb
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.csprojResolveAssemblyReference.cache
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\reWZ.dll
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\reNX.dll
