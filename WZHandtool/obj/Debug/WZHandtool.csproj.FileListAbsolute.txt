@@ -11,3 +11,5 @@ C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.pdb
 C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.csprojResolveAssemblyReference.cache
 C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\reWZ.dll
 C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\bin\Debug\reNX.dll
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.MapInformation.resources
+C:\Users\Itzik\Desktop\Projects\WZHandtool\WZHandtool\obj\Debug\WZHandtool.ImageInformation.resources

@@ -24,9 +24,9 @@ namespace WZHandtool
             textBox1.Enabled = false;
             if (Directory.Exists(Program.DataLocation))
                 textBox1.Text = Program.DataLocation;
-            //temp
-            //checkBox1.Enabled = false;
-            //checkBox1.Checked = true;
+            //TODO: load new wz
+            checkBox1.Enabled = false;
+            checkBox1.Checked = true;
         }
 
         private void Load_OnFormClosing(object sender, FormClosingEventArgs e)

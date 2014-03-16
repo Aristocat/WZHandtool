@@ -17,7 +17,7 @@ namespace WZHandtool
         private Dictionary<string, WZFile> DataFiles;
         private DataProvider Provider;
         private SortedDictionary<int, ItemData> ItemList;
-        private bool Update = false;
+        private bool Updated = false;
 
         public MainForm()
         {
@@ -34,7 +34,7 @@ namespace WZHandtool
 
         private void MainForm_OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!Update)
+            if (!Updated)
                 return;
             DialogResult Result = MessageBox.Show(
                 "Would you like to save the loaded data into binary format for faster loading?",
@@ -96,6 +96,7 @@ namespace WZHandtool
                 if (icon.Height > dataGridView1.Rows[i].Height)
                     dataGridView1.Rows[i].Height = icon.Height;
             }
+            dataGridView1.Columns[2].Visible = false;
         }
 
         private void MainForm_OnResize(object sender, EventArgs e)
@@ -258,7 +259,10 @@ namespace WZHandtool
                                     else if (stat.Name.Equals("miniMap"))
                                         foreach (WZObject info in stat)
                                             if (info.Name.Equals("canvas"))
+                                            {
                                                 itemData.Icon = ((WZCanvasProperty)info).Value;
+                                                itemData.IconPath = info.Path;
+                                            }
                                 }
                                 if (itemData.Icon == null)
                                     itemData.Icon = new Bitmap(1, 1);
@@ -268,6 +272,96 @@ namespace WZHandtool
                                 ItemList.Add(id, itemData);
                             }
                         }
+                    }
+                else if (GetWZName(node, i).Equals("Mob")
+                    && GetWZCategory(GetSelectedCategory(selectedCategory)).Equals("Mob"))
+                    foreach (WZObject mob in node)
+                    {
+                        int id = int.Parse(mob.Name.Replace(".img", ""));
+                        itemData = new ItemData();
+                        itemData.ID = id;
+                        itemData.Information = "";
+                        foreach (WZObject stat in mob)
+                        {
+                            foreach (WZObject info in stat)
+                            {
+                                if (stat.Name.Equals("info"))
+                                {
+                                    string value = string.Empty;
+                                    if (info is WZStringProperty)
+                                        value = info.ValueOrDie<string>();
+                                    if (info is WZInt32Property)
+                                        value = info.ValueOrDie<Int32>().ToString();
+                                    if (info is WZSingleProperty)
+                                        value = info.ValueOrDie<float>().ToString();
+                                    if (info is WZPointProperty)
+                                        value = info.ValueOrDie<Point>().ToString();
+                                    if (value == string.Empty)
+                                        value = GetType(info);
+                                    itemData.Information += "{" + info.Name + "=" + value + "} ";
+                                }
+                                if (!stat.Name.Equals("stand") && !stat.Name.Equals("fly"))
+                                    continue;
+                                if (itemData.Icon != null)
+                                    continue;
+                                if (info is WZCanvasProperty)
+                                {
+                                    itemData.Icon = ((WZCanvasProperty)info).Value;
+                                    itemData.IconPath = info.Path;
+                                }
+                            }
+                        }
+                        if (itemData.Icon == null)
+                            itemData.Icon = new Bitmap(1, 1);
+                        else if (itemData.Icon.Width > 100)
+                            itemData.Icon = new Bitmap(itemData.Icon,
+                                new Size(itemData.Icon.Width / 2, itemData.Icon.Height / 2));
+                        ItemList.Add(id, itemData);
+                    }
+                else if (GetWZName(node, i).Equals("Npc")
+                    && GetWZCategory(GetSelectedCategory(selectedCategory)).Equals("Npc"))
+                    foreach (WZObject npc in node)
+                    {
+                        int id = int.Parse(npc.Name.Replace(".img", ""));
+                        itemData = new ItemData();
+                        itemData.ID = id;
+                        itemData.Information = "";
+                        foreach (WZObject stat in npc)
+                        {
+                            foreach (WZObject info in stat)
+                            {
+                                if (stat.Name.Equals("info"))
+                                {
+                                    string value = string.Empty;
+                                    if (info is WZStringProperty)
+                                        value = info.ValueOrDie<string>();
+                                    if (info is WZInt32Property)
+                                        value = info.ValueOrDie<Int32>().ToString();
+                                    if (info is WZSingleProperty)
+                                        value = info.ValueOrDie<float>().ToString();
+                                    if (info is WZPointProperty)
+                                        value = info.ValueOrDie<Point>().ToString();
+                                    if (value == string.Empty)
+                                        value = GetType(info);
+                                    itemData.Information += "{" + info.Name + "=" + value + "} ";
+                                }
+                                if (!stat.Name.Equals("stand"))
+                                    continue;
+                                if (itemData.Icon != null)
+                                    continue;
+                                if (info is WZCanvasProperty)
+                                {
+                                    itemData.Icon = ((WZCanvasProperty)info).Value;
+                                    itemData.IconPath = info.Path;
+                                }
+                            }
+                        }
+                        if (itemData.Icon == null)
+                            itemData.Icon = new Bitmap(1, 1);
+                        else if (itemData.Icon.Width > 100)
+                            itemData.Icon = new Bitmap(itemData.Icon,
+                                new Size(itemData.Icon.Width / 2, itemData.Icon.Height / 2));
+                        ItemList.Add(id, itemData);
                     }
                 else if (GetWZName(node, i).Equals("String"))
                     foreach (WZObject type in node)
@@ -352,12 +446,45 @@ namespace WZHandtool
                                     ItemList[id] = itemData;
                                 }
                             }
+                        else if (type.Name.Equals("Mob.img")
+                            && GetWZCategory(GetSelectedCategory(selectedCategory)).Equals("Mob"))
+                            foreach (WZObject mob in type)
+                            {
+                                int id = int.Parse(mob.Name);
+                                if (!ItemList.ContainsKey(id))
+                                    continue;
+                                foreach (WZObject stat in mob)
+                                {
+                                    itemData = ItemList[id];
+                                    if (stat.Name.Equals("name"))
+                                        itemData.Name = stat.ValueOrDie<string>();
+                                }
+                                ItemList[id] = itemData;
+                            }
+                        else if (type.Name.Equals("Npc.img")
+                            && GetWZCategory(GetSelectedCategory(selectedCategory)).Equals("Npc"))
+                            foreach (WZObject npc in type)
+                            {
+                                int id = int.Parse(npc.Name);
+                                if (!ItemList.ContainsKey(id))
+                                    continue;
+                                itemData = ItemList[id];
+                                foreach (WZObject stat in npc)
+                                {
+                                    if (stat.Name.Equals("name") && itemData.Name == null)
+                                        itemData.Name = ((WZStringProperty)stat).Value;
+                                    else if (stat is WZStringProperty)
+                                        itemData.Description += stat.Name + ": "
+                                            + stat.ValueOrDie<string>() + "\r\n";
+                                }
+                                ItemList[id] = itemData;
+                            }
                     }
             }
             if (!Provider.Cache.ContainsKey(comboBox1.Text))
             {
                 Provider.Cache.Add(comboBox1.Text, ItemList);
-                Update = true;
+                Updated = true;
             }
             return true;
         }
@@ -378,11 +505,18 @@ namespace WZHandtool
                         if (info.Name.Equals("icon") || info.Name.Equals("iconRaw"))
                         {
                             if (info is WZCanvasProperty && itemData.Icon == null)
+                            {
                                 itemData.Icon = ((WZCanvasProperty)info).Value;
+                                itemData.IconPath = info.Path;
+                            }
                             else if (info is WZUOLProperty)
                                 if (((WZUOLProperty)info).Value.Contains("../../"))
+                                {
                                     itemData.Icon = ((WZCanvasProperty)parent.ResolvePath(
                                         ((WZUOLProperty)info).Value.Replace(@"../", ""))).Value;
+                                    itemData.IconPath = parent.ResolvePath(
+                                        ((WZUOLProperty)info).Value.Replace(@"../", "")).Path;
+                                }
                             continue;
                         }
                         string value = string.Empty;
@@ -400,11 +534,20 @@ namespace WZHandtool
                     foreach (WZObject info in stat)
                     {
                         if (info.Name.Equals("hairOverHead"))
+                        {
                             itemData.Icon = ((WZCanvasProperty)info).Value;
+                            itemData.IconPath = info.Path;
+                        }
                         else if (info.Name.Equals("hair") && itemData.Icon == null)
+                        {
                             itemData.Icon = ((WZCanvasProperty)info).Value;
+                            itemData.IconPath = info.Path;
+                        }
                         else if (info.Name.Equals("face"))
+                        {
                             itemData.Icon = ((WZCanvasProperty)info).Value;
+                            itemData.IconPath = info.Path;
+                        }
                     }
             }
             list.Add(itemData.ID, itemData);
@@ -448,6 +591,12 @@ namespace WZHandtool
                     return "Equip";
                 case "Map":
                     return "Map";
+                case "Mob":
+                    return "Mob";
+                case "Skill":
+                    return "Skill";
+                case "Npc":
+                    return "Npc";
                 case "Pet":
                     return "Pet";
                 case "Install":
@@ -486,6 +635,12 @@ namespace WZHandtool
                     return "Item";
                 case "Map":
                     return "Map";
+                case "Mob":
+                    return "Mob";
+                case "Skill":
+                    return "Skill";
+                case "Npc":
+                    return "Npc";
                 default:
                     return string.Empty;
             }
@@ -508,6 +663,81 @@ namespace WZHandtool
                 return "Path";
             else
                 return WZType.Type.ToString();
+        }
+
+        private void ItemList_OnCellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView1.SelectedCells[0].Value is Int32
+                && (comboBox1.Text.Equals("Npc") || comboBox1.Text.Equals("Mob")))
+            {
+                if (Provider.MapCache.Count < 1)
+                {
+                    DialogResult result = MessageBox.Show(
+                        "Map Cache is not loaded yet, would you like to load it for information about Mob/Npc location?",
+                        "Map Cache", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    if (result == DialogResult.Yes)
+                    {
+                        SortedDictionary<int, string> Lifes;
+                        if (Program.OldVersion)
+                        {
+                            foreach (WZObject category in DataFiles["Data"].MainDirectory.ResolvePath(
+                                "Map/Map"))
+                            {
+                                if (!category.Name.StartsWith("Map"))
+                                    continue;
+                                foreach (WZObject map in category)
+                                {
+                                    Lifes = new SortedDictionary<int, string>(); //todo use something different
+                                    foreach (WZObject life in map.ResolvePath("life"))
+                                        if (!Lifes.ContainsKey(int.Parse(life.ResolvePath("id").ValueOrDie<string>())))
+                                            Lifes.Add(int.Parse(life.ResolvePath("id").ValueOrDie<string>()),
+                                                life.ResolvePath("type").ValueOrDie<string>());
+                                    if (!Provider.MapCache.ContainsKey(int.Parse(map.Name.Replace(".img", ""))))
+                                        Provider.MapCache.Add(int.Parse(map.Name.Replace(".img", "")),
+                                            new MapLifeInformation { Name = string.Empty, Life = Lifes });
+                                }
+                            }
+                            foreach (WZObject category in DataFiles["Data"].MainDirectory.ResolvePath(
+                                "String/Map.img"))
+                            {
+                                foreach (WZObject map in category)
+                                {
+                                    if (!Provider.MapCache.ContainsKey(int.Parse(map.Name)))
+                                        continue;
+                                    MapLifeInformation mapInfo = Provider.MapCache[int.Parse(map.Name)];
+                                    mapInfo.Name =
+                                        map.ResolvePath("streetName").ValueOrDie<string>() +
+                                        " : " +
+                                        map.ResolvePath("mapName").ValueOrDie<string>();
+                                    Provider.MapCache[int.Parse(map.Name)] = mapInfo;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        dataGridView1.ClearSelection();
+                        return;
+                    }
+                }
+                int id = (int)dataGridView1.SelectedCells[0].Value;
+                bool Mob = comboBox1.Text.Equals("Mob");
+                MapInformation info = new MapInformation(Provider.MapCache, ItemList[id], Mob);
+                info.ShowDialog();
+            }
+            else if (dataGridView1.SelectedCells[0].Value is Bitmap)
+            {
+                int id = (int)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
+                new ImageInformation(ItemList[id].IconPath.Substring(0,
+                    ItemList[id].IconPath.Length - 2), true).ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Double Click a Mob/NPC ID in order to see more information.\r\n" +
+                    "Double Click an image in order to see it in it's original size.\r\n" +
+                    "Ctrl+C on a selected item in order to copy it's content.");
+            }
+            dataGridView1.ClearSelection();
         }
     }
 }

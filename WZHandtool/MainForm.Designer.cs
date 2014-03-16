@@ -72,7 +72,7 @@
             "Map",
             "Mob",
             "Skill",
-            "NPC",
+            "Npc",
             "Pet",
             "Install",
             "Etc"});
@@ -107,10 +107,12 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridView1.Location = new System.Drawing.Point(0, 49);
+            this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(694, 327);
             this.dataGridView1.TabIndex = 5;
+            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ItemList_OnCellDoubleClick);
             // 
             // label3
             // 
